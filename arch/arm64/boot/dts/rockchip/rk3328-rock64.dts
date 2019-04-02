@@ -47,6 +47,10 @@
 	model = "Pine64 Rock64";
 	compatible = "pine64,rock64", "rockchip,rk3328";
 
+	aliases {
+		ethernet0 = &gmac2io;
+	};
+
 	chosen {
 		bootargs = "earlycon=uart8250,mmio32,0xff130000 swiotlb=1 kpti=0";
 		stdout-path = "serial2:1500000n8";

@@ -1104,7 +1104,6 @@
 		opp-hz = /bits/ 64 <1512000000>;
 		opp-microvolt = <1200000>;
 		clock-latency-ns = <40000>;
-		status = "disabled";
 	};
 };
 
@@ -1113,7 +1112,6 @@
 		opp-hz = /bits/ 64 <1992000000>;
 		opp-microvolt = <1300000>;
 		clock-latency-ns = <40000>;
-		status = "disabled";
 	};
 };
 

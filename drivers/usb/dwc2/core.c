@@ -321,6 +321,19 @@ int dwc2_core_reset(struct dwc2_hsotg *hsotg, bool skip_wait)
 
 	dev_vdbg(hsotg->dev, "%s()\n", __func__);
 
+        /* Wait for AHB master IDLE state */
+        count = 0;
+        do {
+                usleep_range(20000, 40000);
+                greset = dwc2_readl(hsotg->regs + GRSTCTL);
+                if (++count > 50) {
+                        dev_warn(hsotg->dev,
+                                 "%s() HANG! AHB Idle GRSTCTL=%0x\n",
+                                 __func__, greset);
+                        return -EBUSY;
+                }
+        } while (!(greset & GRSTCTL_AHBIDLE));
+
 	/*
 	 * If the current mode is host, either due to the force mode
 	 * bit being set (which persists after core reset) or the
@@ -346,7 +359,7 @@ int dwc2_core_reset(struct dwc2_hsotg *hsotg, bool skip_wait)
 	greset |= GRSTCTL_CSFTRST;
 	dwc2_writel(greset, hsotg->regs + GRSTCTL);
 	do {
-		udelay(1);
+		usleep_range(20000, 40000);
 		greset = dwc2_readl(hsotg->regs + GRSTCTL);
 		if (++count > 50) {
 			dev_warn(hsotg->dev,
@@ -355,19 +368,6 @@ int dwc2_core_reset(struct dwc2_hsotg *hsotg, bool skip_wait)
 			return -EBUSY;
 		}
 	} while (greset & GRSTCTL_CSFTRST);
-
-	/* Wait for AHB master IDLE state */
-	count = 0;
-	do {
-		udelay(1);
-		greset = dwc2_readl(hsotg->regs + GRSTCTL);
-		if (++count > 50) {
-			dev_warn(hsotg->dev,
-				 "%s() HANG! AHB Idle GRSTCTL=%0x\n",
-				 __func__, greset);
-			return -EBUSY;
-		}
-	} while (!(greset & GRSTCTL_AHBIDLE));
 
 	if (wait_for_host_mode && !skip_wait)
 		dwc2_wait_for_mode(hsotg, true);
