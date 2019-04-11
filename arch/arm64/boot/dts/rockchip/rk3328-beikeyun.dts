@@ -319,6 +319,12 @@
 	status = "okay";
 };
 
+&tsadc {
+	rockchip,hw-tshut-mode = <0>;
+	rockchip,hw-tshut-polarity = <1>;
+	status = "okay";
+};
+
 &gpu {
 	status = "disabled";
 };
