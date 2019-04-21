@@ -336,3 +336,11 @@
 &dmc {
 	status = "disabled";
 };
+
+&iep {
+	status = "okay";
+};
+
+&iep_mmu {
+	status = "okay";
+};
